@@ -54,7 +54,9 @@ export function initLifecycle (vm: Component) {
   vm._isDestroyed = false
   vm._isBeingDestroyed = false
 }
-
+// 调用时机只有两个
+// 1-首次渲染
+// 2-数据更新
 export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
@@ -62,6 +64,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
+    // _update的核心是调用vm.__patch__
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
@@ -137,7 +140,8 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
   }
 }
-
+// 核心是先实例化一个渲染watcher，在他的回调函数中调用updateComponent
+// 在updateComponent中先调用vm._render方法生成虚拟Node，最终调用vm._update更新DOM
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -206,6 +210,9 @@ export function mountComponent (
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
+    // 最后判断为跟节点的时候设置vm._isMounted为true
+    // 表示这个实例已经挂载了，同时执行mounted钩子函数
+    // 这里的vm.$vnode表示Vue实例的父虚拟Node，所以为Null则表示当前是Vue的根实例
     vm._isMounted = true
     callHook(vm, 'mounted')
   }

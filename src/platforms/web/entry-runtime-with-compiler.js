@@ -13,7 +13,7 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 首先缓存了原型上的$mount方法再重新定义
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -21,6 +21,8 @@ Vue.prototype.$mount = function (
 ): Component {
   el = el && query(el)
 
+
+  // 限制el，vue不能挂载在body和html这样的根节点上
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
@@ -31,6 +33,8 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 如果没有render方法，则会把el或者template字符串转换成render方法
+  // vue 2.0最终都会转化成render方法
   if (!options.render) {
     let template = options.template
     if (template) {

@@ -45,11 +45,11 @@ export function createElement (
 }
 
 export function _createElement (
-  context: Component,
-  tag?: string | Class<Component> | Function | Object,
-  data?: VNodeData,
-  children?: any,
-  normalizationType?: number
+  context: Component, // VNode的上下文环境
+  tag?: string | Class<Component> | Function | Object, // 标签
+  data?: VNodeData, // VNode的数据
+  children?: any, // 子节点
+  normalizationType?: number // 子节点的规范类型
 ): VNode | Array<VNode> {
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(

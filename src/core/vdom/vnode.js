@@ -1,13 +1,20 @@
 /* @flow */
 
+
+// Virtual DOM就是用一个原生的JS对象去描述一个DOM节点
+// VNode映射到真实DOM实际上要经历VNode的create、diff、patch
 export default class VNode {
+  // 标签名
   tag: string | void;
+  // 数据
   data: VNodeData | void;
+  // 子节点
   children: ?Array<VNode>;
   text: string | void;
   elm: Node | void;
   ns: string | void;
   context: Component | void; // rendered in this component's scope
+  // 键值
   key: string | number | void;
   componentOptions: VNodeComponentOptions | void;
   componentInstance: Component | void; // component instance
